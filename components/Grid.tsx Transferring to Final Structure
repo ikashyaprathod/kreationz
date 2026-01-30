@@ -1,0 +1,12 @@
+import { elements } from '@/data/elements';
+import Card from './Card';
+
+export default function Grid() {
+  return (
+    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
+      {elements.map((el) => (
+        <Card key={el.slug} element={el} />
+      ))}
+    </section>
+  );
+}

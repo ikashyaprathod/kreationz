@@ -1,0 +1,10 @@
+# Add these to .gitignore
+node_modules/
+.next/
+.DS_Store
+*.log
+.env*.local
+out/
+dist/
+.vercel
+.turbo
