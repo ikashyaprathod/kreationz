@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import { SavedProvider } from "@/context/SavedContext";
 
 const josefinSans = Josefin_Sans({ subsets: ["latin"], weight: ["400", "600", "700"] });
 
@@ -23,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${josefinSans.className} antialiased selection:bg-black selection:text-white`} suppressHydrationWarning>
-        <Header />
-        <div className="pt-21">
-          {children}
-        </div>
+        <SavedProvider>
+          <Header />
+          <div className="pt-21">
+            {children}
+          </div>
+        </SavedProvider>
       </body>
     </html>
   );

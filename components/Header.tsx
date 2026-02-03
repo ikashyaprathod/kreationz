@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useSaved } from '@/context/SavedContext';
 
 interface MegaMenuItem {
     title: string;
@@ -39,24 +42,21 @@ const megaMenuData: Record<string, MegaMenuSection> = {
             { title: 'Web Design', description: 'category', href: '/' },
             { title: 'Animation', description: 'category', href: '/' },
             { title: 'Branding', description: 'category', href: '/' },
-            { title: 'Illustration', description: 'category', href: '/' },
-            { title: 'Mobile', description: 'category', href: '/' },
-            { title: 'Typography', description: 'category', href: '/' },
-            { title: 'Print', description: 'category', href: '/' },
         ],
     },
 };
 
 export default function Header() {
+    const { savedIds } = useSaved();
     const navItems = [
-        { label: 'Learn Design', key: 'learnDesign' },
+        { label: 'Explore', key: 'learnDesign' }, // Maps 'Explore' label to existing 'learnDesign' data
         { label: 'Find Work', key: 'findWork' },
         { label: 'Inspiration', key: 'inspiration' },
     ];
 
     return (
         <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 sm:h-20 lg:h-21 py-4 sm:py-5 flex items-center justify-between">
+            <div className="max-w-wide mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 lg:h-21 py-4 sm:py-5 flex items-center justify-between">
                 {/* Left Group: Logo + Navigation */}
                 <div className="flex items-center gap-8 lg:gap-16">
                     {/* Brand */}
@@ -85,9 +85,9 @@ export default function Header() {
                                 </button>
 
                                 {/* Mega Menu - Pure CSS Hover */}
-                                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-200 ease-out">
-                                    <div className="max-w-[1280px] mx-auto">
-                                        <div className={`bg-white rounded-2xl shadow-2xl border border-gray-100 ${item.key === 'findWork' ? 'py-6 px-7 min-w-[420px] max-w-[540px]' : 'py-5 px-6 min-w-[300px] max-w-[360px]'}`}>
+                                <div className={`absolute top-full pt-4 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-200 ease-out z-50 ${item.key === 'findWork' ? '-left-10' : '-left-5'}`}>
+                                    <div className="max-w-[1280px]">
+                                        <div className={`bg-white rounded-2xl shadow-xl border border-gray-100 ${item.key === 'findWork' ? 'py-6 px-7 min-w-[420px] max-w-[540px]' : 'py-6 px-0 w-[260px]'}`}>
                                             {/* Two-column layout for Find Work, single column for others */}
                                             {item.key === 'findWork' && megaMenuData[item.key].rightItems ? (
                                                 // Two-column layout for Find Work
@@ -115,10 +115,10 @@ export default function Header() {
                                                                     )}
 
                                                                     <div className="flex-1">
-                                                                        <h4 className="text-[16px] leading-tight font-semibold text-gray-900 group-hover/item:text-black">
+                                                                        <h4 className="text-[16px] leading-none font-semibold text-gray-900 group-hover/item:text-black">
                                                                             {menuItem.title}
                                                                         </h4>
-                                                                        <p className="text-[14px] text-gray-500 leading-relaxed mt-1">
+                                                                        <p className="text-[14px] text-gray-500 leading-tight mt-1">
                                                                             {menuItem.description}
                                                                         </p>
                                                                     </div>
@@ -142,7 +142,7 @@ export default function Header() {
                                                 </div>
                                             ) : (
                                                 // Single column layout for other menus
-                                                <div className="space-y-3">
+                                                <div className="space-y-2">
                                                     {megaMenuData[item.key].leftItems.map((menuItem, idx) => {
                                                         const isFeatured = menuItem.description === 'trending' || menuItem.description === 'featured';
                                                         const isCategory = menuItem.description === 'category';
@@ -178,16 +178,16 @@ export default function Header() {
                                                                 ) : (
                                                                     // Regular menu item
                                                                     <Link href={menuItem.href} className="block group/item">
-                                                                        <div className={`rounded-lg px-3 hover:bg-gray-50 transition-colors flex gap-3 ${hasDescription ? 'py-4 items-start' : 'py-3 items-center'}`}>
+                                                                        <div className={`px-5 hover:bg-gray-50 transition-colors flex gap-3 ${hasDescription ? 'py-2.5 items-start' : 'py-2 items-center'}`}>
                                                                             {/* Icons */}
                                                                             {menuItem.description === 'trending' && (
-                                                                                <svg className="w-[18px] h-[18px] text-gray-800 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                <svg className="w-[18px] h-[18px] text-black flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                                                                 </svg>
                                                                             )}
                                                                             {menuItem.description === 'featured' && (
-                                                                                <svg className="w-[18px] h-[18px] text-gray-800 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                                                                <svg className="w-[18px] h-[18px] text-black flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                                                                                 </svg>
                                                                             )}
                                                                             {menuItem.title === 'Blog' && (
@@ -207,11 +207,11 @@ export default function Header() {
                                                                             )}
 
                                                                             <div className="flex-1">
-                                                                                <h4 className={`text-[15px] leading-tight group-hover/item:text-black ${isFeatured || hasDescription ? 'font-semibold text-gray-900' : 'font-normal text-gray-900'}`}>
+                                                                                <h4 className={`text-[15px] leading-none group-hover/item:text-black ${isFeatured || hasDescription ? 'font-semibold text-gray-900' : 'font-normal text-gray-900'}`}>
                                                                                     {menuItem.title}
                                                                                 </h4>
                                                                                 {hasDescription && (
-                                                                                    <p className="text-[13px] text-gray-500 leading-snug mt-1.5">
+                                                                                    <p className="text-[13px] text-gray-500 leading-tight mt-1.5">
                                                                                         {menuItem.description}
                                                                                     </p>
                                                                                 )}
@@ -221,7 +221,7 @@ export default function Header() {
                                                                 )}
 
                                                                 {/* Separators */}
-                                                                {showSeparator && <div className="my-4 mx-3 border-t border-gray-200"></div>}
+                                                                {showSeparator && <div className="my-4 mx-5 border-t border-gray-100"></div>}
                                                                 {showInspirationSeparator && <div className="my-4 mx-3 border-t border-gray-200"></div>}
                                                             </div>
                                                         );
@@ -229,24 +229,52 @@ export default function Header() {
                                                 </div>
                                             )}
 
-                                            {/* Bottom Helper */}
-                                            <div className="mt-3 pt-3 border-t border-gray-100">
-                                                <Link
-                                                    href="/"
-                                                    className="block px-2 py-1 text-[12px] text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1"
-                                                >
-                                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                                    </svg>
-                                                    {item.key === 'findWork' ? 'Learn more about getting hired on Dribbble →' : `View all in ${item.label} →`}
-                                                </Link>
-                                            </div>
+                                            {/* Bottom Helper - Hide for Explore/LearnDesign */}
+                                            {item.key !== 'learnDesign' && (
+                                                <div className="mt-3 pt-3 border-t border-gray-100">
+                                                    <Link
+                                                        href="/"
+                                                        className="block px-2 py-1 text-[12px] text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1"
+                                                    >
+                                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                                        </svg>
+                                                        {item.key === 'findWork' ? 'Learn more about getting hired on Dribbble →' : `View all in ${item.label} →`}
+                                                    </Link>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </nav>
+                </div>
+
+                {/* Right Group: Saved Items (Visible on all screens) */}
+                <div className="flex items-center gap-4">
+                    <button className="relative p-2 text-gray-400 hover:text-black transition-colors rounded-full hover:bg-gray-50 group">
+                        <span className="sr-only">Saved Items</span>
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                        </svg>
+                        {savedIds.length > 0 && (
+                            <span className="absolute top-1 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-pink-500 text-[10px] font-bold text-white ring-2 ring-white">
+                                {savedIds.length}
+                            </span>
+                        )}
+                        {/* Tooltip */}
+                        <div className="absolute top-full right-0 mt-2 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            {savedIds.length} Saved {savedIds.length === 1 ? 'Shot' : 'Shots'}
+                        </div>
+                    </button>
+
+                    {/* Mobile Menu Button (Placeholder) */}
+                    <button className="xl:hidden p-2 text-gray-900">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </header>

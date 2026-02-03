@@ -23,8 +23,8 @@ export default function Hero() {
     return (
         <section className="w-full overflow-hidden bg-white">
             {/* Hero Content - Responsive layout */}
-            <div className="max-w-[1800px] mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-6 sm:pb-8">
-                <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-center">
+            <div className="max-w-wide mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-6 sm:pb-8">
+                <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-center">
                     {/* Left Column - Content */}
                     <div className="space-y-4 sm:space-y-5">
                         {/* Headline */}
@@ -115,14 +115,14 @@ export default function Hero() {
 
                     {/* Right Column - Robot Image - Hidden on mobile */}
                     <div className="relative w-full hidden lg:flex items-center justify-center">
-                        <div className="w-full h-[480px] xl:h-[480px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-800 to-gray-900">
-                            <Image
-                                src="/hero-character-large.png"
-                                alt="Featured design work"
-                                fill
-                                className="object-contain p-4 sm:p-6"
-                                priority
-                                unoptimized
+                        <div className="w-full h-[480px] xl:h-[480px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl bg-gray-900">
+                            <video
+                                src="/SM.webm"
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="object-cover w-full h-full"
                             />
                         </div>
                         {/* Designer Credit */}
@@ -135,7 +135,7 @@ export default function Hero() {
             </div>
 
             {/* Full-Width Project Brief Section */}
-            <div className="max-w-[1800px] mx-auto px-4 sm:px-6 pb-6 sm:pb-8">
+            <div className="max-w-wide mx-auto px-4 sm:px-6 pb-6 sm:pb-8">
                 <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 rounded-full px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-200 w-full">
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />

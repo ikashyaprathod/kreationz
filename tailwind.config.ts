@@ -11,6 +11,9 @@ const config: Config = {
                 background: "var(--background)",
                 foreground: "var(--foreground)",
             },
+            maxWidth: {
+                'wide': '1900px',
+            },
         },
     },
     plugins: [],
