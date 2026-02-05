@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { Element } from '@/data/elements';
 import { useState } from 'react';
 import { useSaved } from '@/context/SavedContext';
+import { useAuth } from '@/context/AuthContext';
+import AuthModal from './AuthModal';
 
 interface CardProps {
     element: Element;
@@ -14,19 +16,36 @@ export default function Card({ element }: CardProps) {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(element.likes);
     const [viewCount, setViewCount] = useState(parseInt(element.views.replace('k', '000'), 10) || 0);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     const { isSaved, toggleSaved } = useSaved();
+    const { user } = useAuth();
     const saved = isSaved(element.slug);
 
     const handleLike = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+
+        if (!user) {
+            setShowAuthModal(true);
+            return;
+        }
+
         if (isLiked) {
             setLikeCount(prev => prev - 1);
         } else {
             setLikeCount(prev => prev + 1);
         }
         setIsLiked(!isLiked);
+    };
+
+    const handleFollow = () => {
+        if (!user) {
+            setShowAuthModal(true);
+            return;
+        }
+        setIsFollowing(!isFollowing);
     };
 
     const handleVisit = () => {
@@ -65,6 +84,10 @@ export default function Card({ element }: CardProps) {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
+                                    if (!user) {
+                                        setShowAuthModal(true);
+                                        return;
+                                    }
                                     toggleSaved(element.slug);
                                 }}
                                 className={`h-9 w-9 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-sm ${saved ? 'text-black fill-black' : 'text-gray-900'}`}
@@ -76,7 +99,6 @@ export default function Card({ element }: CardProps) {
                             <button
                                 onClick={(e) => {
                                     handleLike(e);
-                                    // Prevent link navigation is handled in handleLike's stopPropagation
                                 }}
                                 className={`h-9 w-9 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-sm ${isLiked ? 'text-pink-500' : 'text-gray-900'}`}
                             >
@@ -93,7 +115,7 @@ export default function Card({ element }: CardProps) {
             <div className="mt-3 flex items-center justify-between">
                 {/* Left: Author Info with Hover Card */}
                 <div className="relative group/author">
-                    <Link href="/profile" className="flex items-center gap-2">
+                    <Link href={`/designer/${element.author.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="flex items-center gap-2">
                         <div className="w-5 h-5 rounded-full bg-gray-200 overflow-hidden relative">
                             <Image src={element.avatar} alt={element.author} width={20} height={20} className="object-cover" unoptimized />
                         </div>
@@ -126,26 +148,31 @@ export default function Card({ element }: CardProps) {
 
                                 {/* Right: Buttons */}
                                 <div className="flex items-center gap-2">
-                                    <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg text-sm hover:border-gray-300 hover:bg-gray-50 transition-colors">
-                                        Follow
+                                    <button
+                                        onClick={handleFollow}
+                                        className={`px-4 py-2 border font-medium rounded-lg text-sm transition-colors ${isFollowing
+                                            ? 'bg-gray-50 border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 hover:bg-red-50'
+                                            : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                                            }`}
+                                    >
+                                        {isFollowing ? 'Following' : 'Follow'}
                                     </button>
-                                    <button className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg text-sm hover:bg-gray-800 transition-colors">
+                                    <a
+                                        href="mailto:hello@kreationz.com"
+                                        className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg text-sm hover:bg-gray-800 transition-colors"
+                                    >
                                         Get in touch
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-3 gap-2">
-                                {/* Mock Recent Shots */}
-                                <div className="aspect-[4/3] rounded-md bg-gray-100 overflow-hidden relative">
-                                    <Image src="/previews/shot-1.png" fill className="object-cover" alt="Shot 1" unoptimized />
-                                </div>
-                                <div className="aspect-[4/3] rounded-md bg-gray-100 overflow-hidden relative">
-                                    <Image src="/previews/shot-2.png" fill className="object-cover" alt="Shot 2" unoptimized />
-                                </div>
-                                <div className="aspect-[4/3] rounded-md bg-gray-100 overflow-hidden relative">
-                                    <Image src="/previews/shot-3.png" fill className="object-cover" alt="Shot 3" unoptimized />
-                                </div>
+                                {/* Mock Recent Shots with Links */}
+                                {[1, 2, 3].map((i) => (
+                                    <Link key={i} href={`/elements/shot-${i}`} className="aspect-[4/3] rounded-md bg-gray-100 overflow-hidden relative block hover:opacity-90 transition-opacity">
+                                        <Image src={`/previews/shot-${i}.png`} fill className="object-cover" alt={`Shot ${i}`} unoptimized />
+                                    </Link>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -170,6 +197,12 @@ export default function Card({ element }: CardProps) {
                     </div>
                 </div>
             </div>
+
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                initialMode="login"
+            />
         </div>
     );
 }

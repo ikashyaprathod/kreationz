@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Hero() {
@@ -126,10 +127,17 @@ export default function Hero() {
                             />
                         </div>
                         {/* Designer Credit */}
-                        <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 bg-white rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg flex items-center gap-2">
-                            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-800 rounded-full"></div>
-                            <span className="text-xs sm:text-sm font-semibold text-gray-900">Leandro Sosa</span>
-                        </div>
+                        <Link href="/designer/kashyap-rathod" className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 bg-white rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg flex items-center gap-2 hover:bg-gray-50 transition-colors cursor-pointer">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 relative rounded-full overflow-hidden">
+                                <Image
+                                    src="/kashyap.png"
+                                    alt="Kashyap Rathod"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                            <span className="text-xs sm:text-sm font-semibold text-gray-900">Kashyap Rathod</span>
+                        </Link>
                     </div>
                 </div>
             </div>

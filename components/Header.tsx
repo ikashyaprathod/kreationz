@@ -1,7 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useSaved } from '@/context/SavedContext';
+import { useAuth } from '@/context/AuthContext';
+import AuthModal from './AuthModal';
 
 interface MegaMenuItem {
     title: string;
@@ -48,6 +52,9 @@ const megaMenuData: Record<string, MegaMenuSection> = {
 
 export default function Header() {
     const { savedIds } = useSaved();
+    const { user, logout } = useAuth();
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
     const navItems = [
         { label: 'Explore', key: 'learnDesign' }, // Maps 'Explore' label to existing 'learnDesign' data
         { label: 'Find Work', key: 'findWork' },
@@ -251,32 +258,106 @@ export default function Header() {
                     </nav>
                 </div>
 
-                {/* Right Group: Saved Items (Visible on all screens) */}
-                <div className="flex items-center gap-4">
-                    <button className="relative p-2 text-gray-400 hover:text-black transition-colors rounded-full hover:bg-gray-50 group">
-                        <span className="sr-only">Saved Items</span>
+                {/* Right Group: Auth & Actions */}
+                <div className="flex items-center gap-3 sm:gap-4">
+                    {/* Search - Visible on Mobile only */}
+                    <button className="sm:hidden p-2 text-gray-900">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
-                        {savedIds.length > 0 && (
-                            <span className="absolute top-1 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-pink-500 text-[10px] font-bold text-white ring-2 ring-white">
-                                {savedIds.length}
-                            </span>
-                        )}
-                        {/* Tooltip */}
-                        <div className="absolute top-full right-0 mt-2 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                            {savedIds.length} Saved {savedIds.length === 1 ? 'Shot' : 'Shots'}
-                        </div>
                     </button>
 
-                    {/* Mobile Menu Button (Placeholder) */}
-                    <button className="xl:hidden p-2 text-gray-900">
+                    {user ? (
+                        <>
+                            {/* Saved Items Button */}
+                            <button className="relative p-2 text-gray-400 hover:text-black transition-colors rounded-full hover:bg-gray-50 group">
+                                <span className="sr-only">Saved Items</span>
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                </svg>
+                                {savedIds.length > 0 && (
+                                    <span className="absolute top-1 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-pink-500 text-[10px] font-bold text-white ring-2 ring-white">
+                                        {savedIds.length}
+                                    </span>
+                                )}
+                                {/* Tooltip */}
+                                <div className="absolute top-full right-0 mt-2 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                    {savedIds.length} Saved {savedIds.length === 1 ? 'Shot' : 'Shots'}
+                                </div>
+                            </button>
+
+                            {/* User Menu */}
+                            <div className="relative group/user z-50">
+                                <button className="flex items-center gap-2">
+                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-gray-200 overflow-hidden relative">
+                                        <Image
+                                            src={user.avatar || '/kashyap.png'}
+                                            alt={user.name}
+                                            fill
+                                            className="object-cover"
+                                            unoptimized
+                                        />
+                                    </div>
+                                    <svg className="w-4 h-4 text-gray-400 group-hover/user:text-gray-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+
+                                {/* Dropdown */}
+                                <div className="absolute top-full right-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover/user:opacity-100 group-hover/user:visible transition-all duration-200 transform origin-top-right">
+                                    <div className="p-4 border-b border-gray-100">
+                                        <p className="font-bold text-gray-900 truncate">{user.name}</p>
+                                        <p className="text-sm text-gray-500 truncate">@{user.username}</p>
+                                    </div>
+                                    <div className="py-2">
+                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black">Profile</a>
+                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black">Edit Profile</a>
+                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black">Account Settings</a>
+                                    </div>
+                                    <div className="py-2 border-t border-gray-100">
+                                        <button
+                                            onClick={logout}
+                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium"
+                                        >
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => { setAuthMode('login'); setShowAuthModal(true); }}
+                                className="text-[14px] font-bold text-gray-900 hover:text-black hidden sm:block"
+                            >
+                                Log in
+                            </button>
+                            <button
+                                onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }}
+                                className="inline-flex items-center justify-center h-10 px-5 text-sm font-bold text-white transition-all duration-200 bg-gray-900 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                            >
+                                Sign up
+                            </button>
+                        </>
+                    )}
+
+                    {/* Mobile Menu Button - Keeping placeholder for now */}
+                    <button className="xl:hidden p-2 text-gray-900 ml-1">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
                         </svg>
                     </button>
                 </div>
             </div>
+
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                initialMode={authMode}
+            />
         </header>
     );
 }

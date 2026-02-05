@@ -4,10 +4,17 @@ import Card from './Card';
 interface GridProps {
     category?: string;
     sort?: string;
+    author?: string; // New prop for filtering by author slug
 }
 
-export default function Grid({ category = 'All', sort = 'Popular' }: GridProps) {
+export default function Grid({ category = 'All', sort = 'Popular', author }: GridProps) {
     const filteredElements = elements.filter((el) => {
+        // Filter by Author if provided (slug matching)
+        if (author) {
+            const elAuthorSlug = el.author.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            if (elAuthorSlug !== author) return false;
+        }
+
         if (category === 'All') return true;
 
         // Map UI categories to Data categories
