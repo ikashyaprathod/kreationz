@@ -65,11 +65,8 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
 
                 <div className="text-center mb-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                        {mode === 'login' ? 'Welcome back' : 'Create an account'}
+                        {mode === 'login' ? 'Log in to Kreationz' : 'Create your Kreationz account'}
                     </h2>
-                    <p className="text-sm text-gray-500">
-                        {mode === 'login' ? 'Enter your details to sign in.' : 'Join the community of top designers.'}
-                    </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -81,7 +78,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
                                     placeholder="John Doe"
                                 />
                             </div>
@@ -91,7 +88,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                                     type="text"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
                                     placeholder="johndoe"
                                 />
                             </div>
@@ -104,7 +101,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
                             placeholder="john@example.com"
                         />
                     </div>
@@ -122,7 +119,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-gray-900 focus:bg-white transition-all font-medium"
                             placeholder="••••••••"
                         />
                     </div>
@@ -136,19 +133,19 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-3 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-full transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+                        className="w-full py-3.5 bg-gray-900 hover:bg-black text-white font-bold rounded-full transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-4"
                     >
-                        {isLoading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
+                        {isLoading ? 'Processing...' : (mode === 'login' ? 'Log in' : 'Create account')}
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
+                <div className="mt-8 text-center text-sm text-gray-600">
                     {mode === 'login' ? (
                         <>
                             Don't have an account?{' '}
                             <button
                                 onClick={() => { setMode('signup'); setError(''); }}
-                                className="font-bold text-gray-900 hover:underline"
+                                className="font-semibold text-gray-900 hover:text-black hover:underline ml-1"
                             >
                                 Sign up
                             </button>
@@ -158,9 +155,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                             Already have an account?{' '}
                             <button
                                 onClick={() => { setMode('login'); setError(''); }}
-                                className="font-bold text-gray-900 hover:underline"
+                                className="font-semibold text-gray-900 hover:text-black hover:underline ml-1"
                             >
-                                Sign in
+                                Log in
                             </button>
                         </>
                     )}

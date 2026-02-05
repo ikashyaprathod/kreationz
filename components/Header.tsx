@@ -331,15 +331,9 @@ export default function Header() {
                         <>
                             <button
                                 onClick={() => { setAuthMode('login'); setShowAuthModal(true); }}
-                                className="text-[14px] font-bold text-gray-900 hover:text-black hidden sm:block"
+                                className="inline-flex items-center justify-center h-10 px-6 text-sm font-bold text-white transition-all duration-200 bg-gray-900 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
                             >
                                 Log in
-                            </button>
-                            <button
-                                onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }}
-                                className="inline-flex items-center justify-center h-10 px-5 text-sm font-bold text-white transition-all duration-200 bg-gray-900 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
-                            >
-                                Sign up
                             </button>
                         </>
                     )}
